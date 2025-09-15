@@ -21,7 +21,7 @@
             background: #fff;
             padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px S15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
         h1, h2 {
             color: #1a1a1a;
@@ -59,6 +59,10 @@
             padding: 8px;
             border: 1px solid #ced4da;
             border-radius: 6px;
+            text-align: center;
+        }
+        .na-cell {
+            color: #adb5bd;
             text-align: center;
         }
 
@@ -133,6 +137,7 @@
                 <th>Carousel (Qty)</th>
                 <th>Reels/Video (Qty)</th>
                 <th>Story (Qty)</th>
+                <th>Tweet (Qty)</th>
             </tr>
         </thead>
         <tbody>
@@ -142,6 +147,7 @@
                 <td><input type="number" class="cost-input" data-cost-key="carousel_fb" min="0" value="0"></td>
                 <td><input type="number" class="cost-input" data-cost-key="reels_fb" min="0" value="0"></td>
                 <td><input type="number" class="cost-input" data-cost-key="story_fb" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
             </tr>
             <tr>
                 <td>Instagram</td>
@@ -149,6 +155,23 @@
                 <td><input type="number" class="cost-input" data-cost-key="carousel_ig" min="0" value="0"></td>
                 <td><input type="number" class="cost-input" data-cost-key="reels_ig" min="0" value="0"></td>
                 <td><input type="number" class="cost-input" data-cost-key="story_ig" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+            </tr>
+            <tr>
+                <td>X (Twitter)</td>
+                <td class="na-cell">N/A</td>
+                <td class="na-cell">N/A</td>
+                <td><input type="number" class="cost-input" data-cost-key="video_x" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+                <td><input type="number" class="cost-input" data-cost-key="tweet_x" min="0" value="0"></td>
+            </tr>
+            <tr>
+                <td>Threads</td>
+                <td><input type="number" class="cost-input" data-cost-key="static_th" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="carousel_th" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="video_th" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+                <td class="na-cell">N/A</td>
             </tr>
         </tbody>
     </table>
@@ -247,6 +270,13 @@
         reels_ig: 7000,
         story_ig: 1500,
         
+        video_x: 3000,
+        tweet_x: 500,
+
+        static_th: 400,
+        carousel_th: 800,
+        video_th: 1500,
+
         // Services Offered (monthly fee)
         community_management: 25000,
         reporting: 10000,
