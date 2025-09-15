@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narrative | System Cost Calculator</title>
+    <style>
+        /* --- General Styling --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h1, h2 {
+            color: #1a1a1a;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        /* --- Form & Table Styling --- */
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        th {
+            background-color: #f1f3f5;
+        }
+        td:first-child {
+            font-weight: 600;
+        }
+        input[type="number"], select {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .na-cell {
+            color: #adb5bd;
+            text-align: center;
+        }
+
+        /* --- Services & Summary Styling --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .summary-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .summary-box {
+            width: 350px;
+            background-color: #f1f3f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        .summary-box .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 1.1rem;
+        }
+        .summary-box .summary-row:not(:last-child) {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .summary-box .summary-row span {
+            font-weight: 600;
+        }
+        #grandTotal {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Narrative Cost Calculator 🚀</h1>
+
+    <div class="input-group">
+        <div>
+            <label for="clientName">Client Name</label>
+            <input type="text" id="clientName" placeholder="e.g., Acme Coffee Co.">
+        </div>
+        <div>
+            <label for="projectName">Project / Retainer Name</label>
+            <input type="text" id="projectName" placeholder="e.g., October Socials">
+        </div>
+    </div>
+
+    <h2>Content Deliverables</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Platform</th>
+                <th>Static Post (Qty)</th>
+                <th>Carousel (Qty)</th>
+                <th>Reels/Video (Qty)</th>
+                <th>Story (Qty)</th>
+                <th>Tweet/Snap (Qty)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Facebook</td>
+                <td><input type="number" class="cost-input" data-cost-key="static_fb" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="carousel_fb" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="reels_fb" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="story_fb" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+            </tr>
+            <tr>
+                <td>Instagram</td>
+                <td><input type="number" class="cost-input" data-cost-key="static_ig" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="carousel_ig" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="reels_ig" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="story_ig" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+            </tr>
+            <tr>
+                <td>X (Twitter)</td>
+                <td class="na-cell">N/A</td>
+                <td class="na-cell">N/A</td>
+                <td><input type="number" class="cost-input" data-cost-key="video_x" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+                <td><input type="number" class="cost-input" data-cost-key="tweet_x" min="0" value="0"></td>
+            </tr>
+            <tr>
+                <td>Threads</td>
+                <td><input type="number" class="cost-input" data-cost-key="static_th" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="carousel_th" min="0" value="0"></td>
+                <td><input type="number" class="cost-input" data-cost-key="video_th" min="0" value="0"></td>
+                <td class="na-cell">N/A</td>
+                <td class="na-cell">N/A</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Service Buckets</h2>
+    <div class="services-grid">
+        <div class="service-item">
+            <input type="checkbox" id="strategy" class="cost-input" data-cost-key="strategy">
+            <label for="strategy">Overall Social Media Strategy</label>
+        </div>
+        <div class="service-item">
+            <input type="checkbox" id="ideation" class="cost-input" data-cost-key="ideation">
+            <label for="ideation">Campaign Ideation</label>
+        </div>
+        <div class="service-item">
+            <input type="checkbox" id="orm" class="cost-input" data-cost-key="orm">
+            <label for="orm">Online Reputation Management</label>
+        </div>
+        <div class="service-item">
+            <select id="communityManagement" class="cost-input">
+                <option value="0" data-cost-key="cm_none">Community Management: None</option>
+                <option value="1" data-cost-key="cm_basic">Community Management: Basic</option>
+                <option value="2" data-cost-key="cm_pro">Community Management: Pro</option>
+            </select>
+        </div>
+         <div class="service-item">
+            <select id="reporting" class="cost-input">
+                <option value="0" data-cost-key="rep_none">Reporting: None</option>
+                <option value="1" data-cost-key="rep_basic">Reporting: Basic</option>
+                <option value="2" data-cost-key="rep_adv">Reporting: Advanced</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="summary-section">
+        <div class="summary-box">
+            <div class="summary-row">
+                <label>Content Subtotal</label>
+                <span id="contentSubtotal">₹0</span>
+            </div>
+            <div class="summary-row">
+                <label>Services Subtotal</label>
+                <span id="servicesSubtotal">₹0</span>
+            </div>
+             <div class="summary-row">
+                <label>Gross Total</label>
+                <span id="grossTotal">₹0</span>
+            </div>
+            <div class="summary-row">
+                <label for="managementFee">Management Fee (%)</label>
+                <input type="number" id="managementFee" class="cost-input" value="15" min="0" style="width: 60px;">
+            </div>
+             <div class="summary-row">
+                <label for="discount">Discount (%)</label>
+                <input type="number" id="discount" class="cost-input" value="0" min="0" style="width: 60px;">
+            </div>
+            <div class="summary-row">
+                <h3>Final Total</h3>
+                <h3 id="grandTotal">₹0</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- The Rate Card Backend ---
+    // IMPORTANT: Update your agency's actual costs here!
+    const rateCard = {
+        // Content Deliverables (per unit)
+        static_fb: 2000,
+        carousel_fb: 3500,
+        reels_fb: 5000,
+        story_fb: 1000,
+
+        static_ig: 2500,
+        carousel_ig: 4000,
+        reels_ig: 7000,
+        story_ig: 1500,
+        
+        video_x: 3000,
+        tweet_x: 500,
+
+        static_th: 400,
+        carousel_th: 800,
+        video_th: 1500,
+
+        // Service Buckets (monthly fee)
+        strategy: 30000,
+        ideation: 25000,
+        orm: 40000,
+        cm_basic: 20000,
+        cm_pro: 35000,
+        rep_basic: 8000,
+        rep_adv: 15000,
+    };
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(amount);
+    }
+
+    function calculateTotal() {
+        let contentSubtotal = 0;
+        let servicesSubtotal = 0;
+
+        // --- Calculate Content Costs ---
+        document.querySelectorAll('input[type="number"][data-cost-key]').forEach(input => {
+            const quantity = parseInt(input.value) || 0;
+            const costKey = input.dataset.costKey;
+            if (rateCard[costKey]) {
+                contentSubtotal += quantity * rateCard[costKey];
+            }
+        });
+        
+        // --- Calculate Service Costs ---
+        // Checkboxes
+        document.querySelectorAll('input[type="checkbox"].cost-input').forEach(checkbox => {
+            if (checkbox.checked) {
+                const costKey = checkbox.dataset.costKey;
+                servicesSubtotal += rateCard[costKey] || 0;
+            }
+        });
+        
+        // Select Dropdowns
+        document.querySelectorAll('select.cost-input').forEach(select => {
+            const selectedOption = select.options[select.selectedIndex];
+            const costKey = selectedOption.dataset.costKey;
+             if (rateCard[costKey]) {
+                servicesSubtotal += rateCard[costKey];
+            }
+        });
+        
+        // --- Calculate Final Totals ---
+        const grossTotal = contentSubtotal + servicesSubtotal;
+        const managementFeePercent = parseFloat(document.getElementById('managementFee').value) || 0;
+        const discountPercent = parseFloat(document.getElementById('discount').value) || 0;
+
+        const managementFeeAmount = grossTotal * (managementFeePercent / 100);
+        const discountAmount = (grossTotal + managementFeeAmount) * (discountPercent / 100);
+        
+        const finalTotal = grossTotal + managementFeeAmount - discountAmount;
+        
+        // --- Update UI ---
+        document.getElementById('contentSubtotal').textContent = formatCurrency(contentSubtotal);
+        document.getElementById('servicesSubtotal').textContent = formatCurrency(servicesSubtotal);
+        document.getElementById('grossTotal').textContent = formatCurrency(grossTotal);
+        document.getElementById('grandTotal').textContent = formatCurrency(finalTotal);
+    }
+
+    // --- Event Listeners ---
+    // Add an event listener to all inputs to recalculate on any change
+    document.querySelectorAll('.cost-input').forEach(input => {
+        input.addEventListener('input', calculateTotal);
+    });
+    
+    // Initial calculation on page load
+    document.addEventListener('DOMContentLoaded', calculateTotal);
+
+</script>
+
+</body>
+</html>
