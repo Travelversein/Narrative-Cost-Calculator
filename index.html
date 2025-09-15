@@ -3,68 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Narrative | Cost Calculator - Monthly & One-Time</title>
-    <style>
-        /* --- General Styling (Dark Theme) --- */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #f8f9fa;
-            margin: 0;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 900px;
-            background: #212121;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-        }
-        h1, h2 {
-            color: #ffffff;
-            border-bottom: 2px solid #343a40;
-            padding-bottom: 10px;
-            margin-bottom: 1.5rem;
-        }
-        h1 { text-align: center; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1.5px; }
-        h2 { font-size: 1.6rem; }
-        
-        /* --- Table Styling --- */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #343a40; color: #f8f9fa; }
-        th { background-color: #2c2c2c; font-weight: 700; }
-        td:first-child { font-weight: 600; }
-        input[type="number"] { width: 80px; padding: 8px; border: 1px solid #495057; border-radius: 6px; text-align: center; background-color: #343434; color: #f8f9fa; }
-        .na-cell { color: #6c757d; text-align: center; }
+    <title>Narrative | Quoting System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-        /* --- Services Styling --- */
-        .services-list { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem; }
-        .service-item { display: flex; align-items: flex-start; gap: 10px; }
-        .service-item input[type="checkbox"] { margin-top: 5px; flex-shrink: 0; accent-color: #007bff; transform: scale(1.2); }
-        .service-details label { font-weight: 600; font-size: 1.1rem; display: block; color: #ffffff; }
-        .service-description { margin: 4px 0 0 0; color: #adb5bd; font-size: 0.95rem; line-height: 1.5; }
+    <style>
+        /* --- General Styling --- */
+        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; background-color:#1a1a1a; color:#f8f9fa; margin:0; padding:2rem; display:flex; justify-content:center; }
+        .container { width:100%; max-width:900px; background:#212121; padding:2rem; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.5); }
+        h1, h2 { color:#ffffff; border-bottom:2px solid #343a40; padding-bottom:10px; margin-bottom:1.5rem; }
+        h1 { text-align:center; font-size:2.2rem; text-transform:uppercase; letter-spacing:1.5px; }
+        h2 { font-size:1.6rem; }
+        button { background-color:#007bff; color:white; border:none; padding:10px 15px; border-radius:6px; font-weight:600; cursor:pointer; transition:background-color 0.2s; }
+        button:hover { background-color:#0056b3; }
+
+        /* --- Management & Templates Section --- */
+        .management-bar { display:flex; justify-content:space-between; align-items:center; background-color:#2c2c2c; padding:1rem; border-radius:8px; margin-bottom:2rem; flex-wrap:wrap; gap:1rem; }
+        .management-bar .control-group { display:flex; align-items:center; gap:10px; }
+        .management-bar label { font-weight:600; }
+        .management-bar input[type="text"], .management-bar select { background-color:#343434; color:#f8f9fa; border:1px solid #495057; padding:8px; border-radius:6px; }
+
+        /* --- Table Styling --- */
+        table { width:100%; border-collapse:collapse; margin-bottom:2rem; }
+        th, td { padding:12px; text-align:left; border-bottom:1px solid #343a40; }
+        th { background-color:#2c2c2c; }
+        input[type="number"] { width:80px; padding:8px; border:1px solid #495057; border-radius:6px; text-align:center; background-color:#343434; color:#f8f9fa; }
+        .na-cell { color:#6c757d; text-align:center; }
+
+        /* --- Services & Notes Styling --- */
+        .services-list { display:flex; flex-direction:column; gap:1.5rem; margin-bottom:2rem; }
+        .service-item { display:flex; align-items:flex-start; gap:10px; }
+        .service-item input[type="checkbox"] { margin-top:5px; accent-color:#007bff; transform:scale(1.2); }
+        .service-details label { font-weight:600; font-size:1.1rem; }
+        .service-description { margin:4px 0 0 0; color:#adb5bd; font-size:0.95rem; }
+        #notes { width:100%; box-sizing:border-box; background-color:#343434; color:#f8f9fa; border:1px solid #495057; border-radius:6px; padding:10px; min-height:80px; margin-top:1rem; }
 
         /* --- Summary Styling --- */
-        .summary-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #343a40; display: flex; justify-content: flex-end; }
-        .summary-box { width: 400px; background-color: #2c2c2c; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 1.1rem; color: #f8f9fa; }
-        .summary-row span { font-weight: 600; }
-        .summary-divider { border-bottom: 2px solid #495057; margin: 10px 0; }
-        .summary-total h3 { margin: 0; font-size: 1.1rem; }
-        .summary-total .total-amount { font-size: 1.8rem; font-weight: bold; color: #007bff; }
+        .summary-section { margin-top:2rem; padding-top:1.5rem; border-top:2px solid #343a40; display:flex; justify-content:space-between; align-items:flex-start; }
+        .summary-box { width:400px; background-color:#2c2c2c; padding:1.5rem; border-radius:8px; }
+        .summary-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; font-size:1.1rem; }
+        .summary-divider { border-bottom:2px solid #495057; margin:10px 0; }
+        .summary-total h3 { margin:0; }
+        .summary-total .total-amount { font-size:1.8rem; font-weight:bold; color:#007bff; }
+        
+        /* --- PDF/Print Styling --- */
+        .no-print { /* This class hides elements from the PDF */ }
+        @media print {
+            body { background-color:#ffffff; color:#000000; padding:0; }
+            .no-print { display:none; }
+            .container { box-shadow:none; border-radius:0; background:#ffffff; }
+            h1, h2, label, p, td, th { color: #000000 !important; }
+            .summary-box, th { background-color: #f1f1f1 !important; }
+            input { border: 1px solid #ccc !important; background-color: #fff !important; color: #000 !important; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Narrative Cost Calculator 🗓️</h1>
+<div class="container" id="quote-container">
+    <h1>Narrative Quoting System 🚀</h1>
+
+    <div class="management-bar no-print">
+        <div class="control-group">
+            <label for="template-select">Load Template:</label>
+            <select id="template-select"><option value="">Select Package</option><option value="startup">Startup Package</option><option value="growth">Growth Package</option></select>
+        </div>
+        <div class="control-group">
+            <label for="quote-select">Load Quote:</label>
+            <select id="quote-select"><option value="">Select Saved Quote</option></select>
+        </div>
+        <div class="control-group">
+            <input type="text" id="quote-name" placeholder="Quote Name...">
+            <button id="save-quote-btn">💾 Save Quote</button>
+        </div>
+    </div>
 
     <h2>Content Deliverables (Weekly)</h2>
-    <table>
-        <thead><tr><th>Platform</th><th>Static Post</th><th>Carousel</th><th>Reels/Video</th><th>Story</th><th>Tweet</th></tr></thead>
+    <table><thead><tr><th>Platform</th><th>Static Post</th><th>Carousel</th><th>Reels/Video</th><th>Story</th><th>Tweet</th></tr></thead>
         <tbody>
             <tr><td>Facebook</td><td><input type="number" class="cost-input" data-cost-key="static_fb" min="0" value="0"></td><td><input type="number" class="cost-input" data-cost-key="carousel_fb" min="0" value="0"></td><td><input type="number" class="cost-input" data-cost-key="reels_fb" min="0" value="0"></td><td><input type="number" class="cost-input" data-cost-key="story_fb" min="0" value="0"></td><td class="na-cell">N/A</td></tr>
             <tr><td>Instagram</td><td><input type="number" class="cost-input" data-cost-key="static_ig" min="0" value="0"></td><td><input type="number" class="cost-input" data-cost-key="carousel_ig" min="0" value="0"></td><td><input type="number" class="cost-input" data-cost-key="reels_ig" min="0" value="0"></td><td><input type="number" class="cost-input" data-cost-key="story_ig" min="0" value="0"></td><td class="na-cell">N/A</td></tr>
@@ -74,30 +89,30 @@
     </table>
 
     <h2>Monthly Retainer Services</h2>
-    <div class="services-list">
-        <div class="service-item"><input type="checkbox" id="cm" class="cost-input" data-cost-key="community_management"><div class="service-details"><label for="cm">Community Management</label><p class="service-description">We engage with your audience by responding to comments and messages, fostering a loyal and active community.</p></div></div>
-        <div class="service-item"><input type="checkbox" id="reporting" class="cost-input" data-cost-key="reporting"><div class="service-details"><label for="reporting">Reporting</label><p class="service-description">Receive clear, insightful monthly reports that track key metrics and performance, helping you understand your ROI.</p></div></div>
-        <div class="service-item"><input type="checkbox" id="ideation" class="cost-input" data-cost-key="campaign_ideation"><div class="service-details"><label for="ideation">Campaign Ideation</label><p class="service-description">We brainstorm and develop creative, data-driven campaign concepts designed to meet your specific marketing goals.</p></div></div>
-        <div class="service-item"><input type="checkbox" id="execution" class="cost-input" data-cost-key="campaign_execution"><div class="service-details"><label for="execution">Campaign Execution</label><p class="service-description">Our team manages the end-to-end execution of your campaigns, ensuring a seamless and effective rollout.</p></div></div>
-        <div class="service-item"><input type="checkbox" id="copywriting" class="cost-input" data-cost-key="copywriting"><div class="service-details"><label for="copywriting">Copywriting</label><p class="service-description">Get compelling copy for your social media, website, or ads that captures your brand voice and drives action.</p></div></div>
-    </div>
-
-    <h2>One-Time Projects</h2>
-    <div class="services-list">
-        <div class="service-item"><input type="checkbox" id="ip_creation" class="cost-input" data-cost-key="ip_creation"><div class="service-details"><label for="ip_creation">IP Creation</label><p class="service-description">We create unique, ownable content properties like web series or podcast concepts that build long-term brand equity.</p></div></div>
-        <div class="service-item"><input type="checkbox" id="website" class="cost-input" data-cost-key="website_design"><div class="service-details"><label for="website">Website Design</label><p class="service-description">We design and develop modern, responsive websites that offer a great user experience and convert visitors.</p></div></div>
+    <div class="services-list"><div class="service-item"><input type="checkbox" id="cm" class="cost-input" data-cost-key="community_management"><div class="service-details"><label for="cm">Community Management</label><p class="service-description">Engaging with your audience to foster a loyal community.</p></div></div>
+        <div class="service-item"><input type="checkbox" id="reporting" class="cost-input" data-cost-key="reporting"><div class="service-details"><label for="reporting">Reporting</label><p class="service-description">Insightful monthly reports tracking key metrics and ROI.</p></div></div>
+        <div class="service-item"><input type="checkbox" id="ideation" class="cost-input" data-cost-key="campaign_ideation"><div class="service-details"><label for="ideation">Campaign Ideation</label><p class="service-description">Creative, data-driven campaign concepts to meet your goals.</p></div></div>
+        <div class="service-item"><input type="checkbox" id="execution" class="cost-input" data-cost-key="campaign_execution"><div class="service-details"><label for="execution">Campaign Execution</label><p class="service-description">End-to-end management for a seamless campaign rollout.</p></div></div>
+        <div class="service-item"><input type="checkbox" id="copywriting" class="cost-input" data-cost-key="copywriting"><div class="service-details"><label for="copywriting">Copywriting</label><p class="service-description">Compelling copy that captures your brand voice and drives action.</p></div></div>
     </div>
     
+    <h2>One-Time Projects</h2>
+    <div class="services-list"><div class="service-item"><input type="checkbox" id="ip_creation" class="cost-input" data-cost-key="ip_creation"><div class="service-details"><label for="ip_creation">IP Creation</label><p class="service-description">Unique content properties (e.g., web series) to build brand equity.</p></div></div>
+        <div class="service-item"><input type="checkbox" id="website" class="cost-input" data-cost-key="website_design"><div class="service-details"><label for="website">Website Design</label><p class="service-description">Modern, responsive websites that convert visitors.</p></div></div>
+    </div>
+
+    <h2>Notes</h2>
+    <textarea id="notes" placeholder="Add any project-specific notes here..."></textarea>
+
     <div class="summary-section">
+        <button id="pdf-btn" class="no-print">📄 Download as PDF</button>
         <div class="summary-box">
-            <div class="summary-row"><span>Monthly Content Subtotal</span><span id="contentSubtotal">₹0</span></div>
-            <div class="summary-row"><span>Monthly Services Subtotal</span><span id="monthlyServicesSubtotal">₹0</span></div>
-            <div class="summary-row"><label for="discount">Discount on Retainer (%)</label><input type="number" id="discount" class="cost-input" value="0" min="0" style="width: 60px;"></div>
+            <div class="summary-row"><span>Monthly Content</span><span id="contentSubtotal">₹0</span></div>
+            <div class="summary-row"><span>Monthly Services</span><span id="monthlyServicesSubtotal">₹0</span></div>
+            <div class="summary-row"><label for="discount">Retainer Discount (%)</label><input type="number" id="discount" class="cost-input" value="0" min="0" style="width: 60px;"></div>
             <div class="summary-row summary-total"><h3>Final Monthly Retainer</h3><span id="finalMonthlyTotal" class="total-amount">₹0</span></div>
-
             <div class="summary-divider"></div>
-
-            <div class="summary-row"><span>One-Time Projects Subtotal</span><span id="oneTimeProjectsSubtotal">₹0</span></div>
+            <div class="summary-row"><span>One-Time Projects</span><span id="oneTimeProjectsSubtotal">₹0</span></div>
             <div class="summary-row summary-total"><h3>Total One-Time Cost</h3><span id="finalOneTimeTotal" class="total-amount">₹0</span></div>
         </div>
     </div>
@@ -113,27 +128,40 @@
         campaign_execution: 40000, copywriting: 20000,
         ip_creation: 50000, website_design: 150000,
     };
+    
+    // --- TEMPLATES ---
+    const templates = {
+        startup: {
+            static_ig: 4, carousel_ig: 2, reels_ig: 2,
+            community_management: true, reporting: true
+        },
+        growth: {
+            static_fb: 4, reels_fb: 4, story_fb: 8,
+            static_ig: 8, carousel_ig: 4, reels_ig: 4, story_ig: 10,
+            community_management: true, reporting: true, campaign_ideation: true
+        }
+    };
 
-    function formatCurrency(amount) {
-        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(amount);
-    }
-
+    // --- DOM ELEMENTS ---
+    const allInputs = document.querySelectorAll('.cost-input');
+    const quoteNameInput = document.getElementById('quote-name');
+    const quoteSelect = document.getElementById('quote-select');
+    const templateSelect = document.getElementById('template-select');
+    
+    // --- CORE CALCULATION ---
     function calculateTotal() {
-        // --- Calculate Content Cost ---
         let weeklyContentCost = 0;
-        document.querySelectorAll('input[type="number"][data-cost-key]').forEach(input => {
+        document.querySelectorAll('input[type="number"].cost-input').forEach(input => {
             weeklyContentCost += (parseInt(input.value) || 0) * (rateCard[input.dataset.costKey] || 0);
         });
         const monthlyContentSubtotal = weeklyContentCost * 4;
 
-        // --- Calculate Service Costs (Separated) ---
         let monthlyServicesSubtotal = 0;
         let oneTimeProjectsSubtotal = 0;
         document.querySelectorAll('input[type="checkbox"].cost-input').forEach(checkbox => {
             if (checkbox.checked) {
                 const costKey = checkbox.dataset.costKey;
                 const cost = rateCard[costKey] || 0;
-                // Check if the service is a one-time project
                 if (costKey === 'website_design' || costKey === 'ip_creation') {
                     oneTimeProjectsSubtotal += cost;
                 } else {
@@ -142,24 +170,137 @@
             }
         });
         
-        // --- Calculate Final Totals ---
         const grossMonthlyTotal = monthlyContentSubtotal + monthlyServicesSubtotal;
         const discountPercent = parseFloat(document.getElementById('discount').value) || 0;
-        const discountAmount = grossMonthlyTotal * (discountPercent / 100);
-        const finalMonthlyTotal = grossMonthlyTotal - discountAmount;
+        const finalMonthlyTotal = grossMonthlyTotal * (1 - (discountPercent / 100));
         
-        const finalOneTimeTotal = oneTimeProjectsSubtotal; // One-time total is just the sum
-        
-        // --- Update UI ---
         document.getElementById('contentSubtotal').textContent = formatCurrency(monthlyContentSubtotal);
         document.getElementById('monthlyServicesSubtotal').textContent = formatCurrency(monthlyServicesSubtotal);
         document.getElementById('finalMonthlyTotal').textContent = formatCurrency(finalMonthlyTotal);
         document.getElementById('oneTimeProjectsSubtotal').textContent = formatCurrency(oneTimeProjectsSubtotal);
-        document.getElementById('finalOneTimeTotal').textContent = formatCurrency(finalOneTimeTotal);
+        document.getElementById('finalOneTimeTotal').textContent = formatCurrency(oneTimeProjectsSubtotal);
     }
 
-    document.querySelectorAll('.cost-input').forEach(input => input.addEventListener('input', calculateTotal));
-    document.addEventListener('DOMContentLoaded', calculateTotal);
+    // --- UTILITY FUNCTIONS ---
+    function formatCurrency(amount) { return new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', minimumFractionDigits:0 }).format(amount); }
+    function resetForm() {
+        document.querySelectorAll('input.cost-input').forEach(input => {
+            if(input.type === 'number') input.value = 0;
+            if(input.type === 'checkbox') input.checked = false;
+        });
+        document.getElementById('notes').value = '';
+    }
+
+    // --- FEATURE: TEMPLATES ---
+    function applyTemplate(templateName) {
+        if (!templateName || !templates[templateName]) return;
+        resetForm();
+        const template = templates[templateName];
+        for (const key in template) {
+            const element = document.querySelector(`[data-cost-key="${key}"]`);
+            if (element) {
+                if (typeof template[key] === 'boolean') {
+                    element.checked = template[key];
+                } else {
+                    element.value = template[key];
+                }
+            }
+        }
+        calculateTotal();
+    }
+
+    // --- FEATURE: SAVE & LOAD QUOTES (using localStorage) ---
+    function saveQuote() {
+        const quoteName = quoteNameInput.value.trim();
+        if (!quoteName) {
+            alert('Please enter a name for the quote.');
+            return;
+        }
+        const quoteData = { name: quoteName, values: {}, notes: document.getElementById('notes').value };
+        allInputs.forEach(input => {
+            const key = input.dataset.costKey || input.id;
+            quoteData.values[key] = (input.type === 'checkbox') ? input.checked : input.value;
+        });
+        
+        let savedQuotes = JSON.parse(localStorage.getItem('narrativeQuotes')) || [];
+        // Remove existing quote with same name to update it
+        savedQuotes = savedQuotes.filter(q => q.name !== quoteName);
+        savedQuotes.push(quoteData);
+        localStorage.setItem('narrativeQuotes', JSON.stringify(savedQuotes));
+        alert(`Quote "${quoteName}" saved!`);
+        populateQuotesDropdown();
+    }
+
+    function loadQuote(quoteName) {
+        if (!quoteName) { resetForm(); calculateTotal(); return; }
+        const savedQuotes = JSON.parse(localStorage.getItem('narrativeQuotes')) || [];
+        const quoteData = savedQuotes.find(q => q.name === quoteName);
+        if (!quoteData) return;
+        
+        resetForm();
+        quoteNameInput.value = quoteData.name;
+        document.getElementById('notes').value = quoteData.notes;
+        allInputs.forEach(input => {
+            const key = input.dataset.costKey || input.id;
+            if (quoteData.values.hasOwnProperty(key)) {
+                if (input.type === 'checkbox') {
+                    input.checked = quoteData.values[key];
+                } else {
+                    input.value = quoteData.values[key];
+                }
+            }
+        });
+        calculateTotal();
+    }
+
+    function populateQuotesDropdown() {
+        const savedQuotes = JSON.parse(localStorage.getItem('narrativeQuotes')) || [];
+        quoteSelect.innerHTML = '<option value="">Select Saved Quote</option>'; // Clear existing
+        savedQuotes.forEach(quote => {
+            const option = document.createElement('option');
+            option.value = quote.name;
+            option.textContent = quote.name;
+            quoteSelect.appendChild(option);
+        });
+    }
+
+    // --- FEATURE: PDF GENERATION ---
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const quoteContainer = document.getElementById('quote-container');
+        const quoteName = quoteNameInput.value.trim() || 'quote';
+        
+        html2canvas(quoteContainer, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'a4'
+            });
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const ratio = canvasWidth / canvasHeight;
+            const newHeight = pdfWidth / ratio;
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, newHeight < pdfHeight ? newHeight : pdfHeight);
+            pdf.save(`Narrative-Quote-${quoteName}.pdf`);
+        });
+    }
+
+    // --- EVENT LISTENERS ---
+    allInputs.forEach(input => input.addEventListener('input', calculateTotal));
+    templateSelect.addEventListener('change', (e) => applyTemplate(e.target.value));
+    document.getElementById('save-quote-btn').addEventListener('click', saveQuote);
+    quoteSelect.addEventListener('change', (e) => loadQuote(e.target.value));
+    document.getElementById('pdf-btn').addEventListener('click', generatePDF);
+    
+    // Initial setup on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        populateQuotesDropdown();
+        calculateTotal();
+    });
 </script>
 
 </body>
